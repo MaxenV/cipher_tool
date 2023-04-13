@@ -23,6 +23,7 @@ public class CipherTool {
         addToAllowedChars(65, 90); // A-Z
         addToAllowedChars(97, 122); // a-z
         addToAllowedChars(10); // endOfLine
+        addToAllowedChars(0); // null
 
     }
 
@@ -120,6 +121,7 @@ public class CipherTool {
             }
             counter++;
         }
+        resultList.add(inside);
 
         int[][] resultArray = new int[resultList.size()][this.blockSize];
         resultArray = resultList.toArray(resultArray);
