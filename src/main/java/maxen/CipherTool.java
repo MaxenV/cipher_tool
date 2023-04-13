@@ -147,4 +147,16 @@ public class CipherTool {
 
         return isBroken;
     }
+
+    public int find_wrong() {
+
+        for (int i = 0; i < cipherArray.length; i++) {
+            if (isBroken(this.cipherArray[i])) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
 }

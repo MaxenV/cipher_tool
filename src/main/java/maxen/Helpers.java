@@ -19,4 +19,19 @@ public class Helpers {
         }
         System.out.println();
     }
+
+    static void showArray(char[] input) {
+        for (char i : input) {
+            System.out.print(i + ", ");
+        }
+        System.out.println();
+    }
+
+    static char[] char_arr_from_int(int[] input) {
+        char[] result = new char[input.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (char) input[i];
+        }
+        return result;
+    }
 }
