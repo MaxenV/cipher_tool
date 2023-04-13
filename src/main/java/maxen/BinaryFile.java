@@ -25,8 +25,6 @@ public class BinaryFile {
             System.out.println(e.getMessage());
         } finally {
         }
-
-        System.out.println("End of reading");
     }
 
     public void setBinary(File input_file) throws IOException, Exception {
