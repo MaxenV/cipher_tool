@@ -5,18 +5,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CipherTool {
-    private int[][] cipherArray;
+    private int[][] encryptedArray;
+    private int[][] decryptedArray;
     private Set<Integer> allowedChars = new HashSet<Integer>(); // allowed characters default a-z,A-Z,0-9
     private String cipherName;
     private String cipherType;
     private int blockSize;
 
     // ANCHOR Counstructors CipherTool
-    public CipherTool(int[] cipherArray, String cipherName, String cipherType) {
+    public CipherTool(int[] encryptedArray, String cipherName, String cipherType) {
         this.cipherName = cipherName;
         this.cipherType = cipherType;
         this.blockSize = 16;
-        this.cipherArray = make_blocks(cipherArray);
+        this.encryptedArray = make_blocks(encryptedArray);
 
         // Add default allowed chars
         addToAllowedChars(48, 57); // 0-9
@@ -28,16 +29,32 @@ public class CipherTool {
     }
 
     // ANCHOR Setters and getters CipherTool
-    public int[][] getCipherArray() {
-        return cipherArray;
+    public int[][] getencryptedArray() {
+        return encryptedArray;
     }
 
-    public void setCipherArray(int[] cipherArray) {
-        this.cipherArray = make_blocks(cipherArray);
+    public void setencryptedArray(int[] encryptedArray) {
+        this.encryptedArray = make_blocks(encryptedArray);
     }
 
-    public void setCipherArray(int[][] cipherArray) {
-        this.cipherArray = cipherArray;
+    public void setencryptedArray(int[][] encryptedArray) {
+        this.encryptedArray = encryptedArray;
+    }
+
+    public int[][] getEncryptedArray() {
+        return encryptedArray;
+    }
+
+    public void setEncryptedArray(int[][] encryptedArray) {
+        this.encryptedArray = encryptedArray;
+    }
+
+    public int[][] getDecryptedArray() {
+        return decryptedArray;
+    }
+
+    public void setDecryptedArray(int[][] decryptedArray) {
+        this.decryptedArray = decryptedArray;
     }
 
     public String getCipherName() {
@@ -148,10 +165,10 @@ public class CipherTool {
         return isBroken;
     }
 
-    public int find_wrong() {
+    public int find_wrong(int[][] arr) {
 
-        for (int i = 0; i < cipherArray.length; i++) {
-            if (isBroken(this.cipherArray[i])) {
+        for (int i = 0; i < arr.length; i++) {
+            if (isBroken(arr[i])) {
                 return i;
             }
         }
