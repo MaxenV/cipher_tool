@@ -34,10 +34,7 @@ public class BinaryFile {
             this.BinFile = new File(fileName);
 
             if (create) {
-                if (this.BinFile.createNewFile()) {
-                } else {
-                    throw new Exception("File already exist");
-                }
+                this.BinFile.createNewFile();
             }
 
             setBinaryArray(readFromFile(this.BinFile));
