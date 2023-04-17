@@ -1,5 +1,6 @@
 package maxen;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +12,8 @@ public class CipherTool {
     private String cipherName;
     private String cipherType;
     private int blockSize;
+    private BinaryFile encryptedFile;
+    private BinaryFile decryptedFile;
 
     // ANCHOR Counstructors CipherTool
     public CipherTool(int[] encryptedArray, String cipherName, String cipherType) {
@@ -26,6 +29,23 @@ public class CipherTool {
         addToAllowedChars(10); // endOfLine
         addToAllowedChars(0); // null
 
+        // Create workingFiles
+        this.encryptedFile = new BinaryFile("workingFiles/.workingEncrypted", true);
+        this.decryptedFile = new BinaryFile("workingFiles/.workingDecrypted", true);
+        this.encryptedFile.write_file(encryptedArray);
+        updateDecriptFile();
+
+        // openssl enc -aes-256-cbc -d -in ./workingFiles/.worworkingEncrypted -out
+        // ./workingFiles/.workingDecrypted -K "abc" -iv "abc"
+    }
+
+    /**
+     * Pseudo destructor should be called after the object is finished using.
+     * Delete hidenfiles.
+     */
+    protected void destuctor() {
+        this.encryptedFile.getBinFile().delete();
+        this.decryptedFile.getBinFile().delete();
     }
 
     // ANCHOR Setters and getters CipherTool
@@ -174,6 +194,21 @@ public class CipherTool {
         }
 
         return -1;
+    }
+
+    private void updateDecriptFile() {
+        try {
+            String command = String.format("openssl enc -%s-%s -d -in %s -out %s -K \"abc\" -iv \"abc\" ",
+                    this.cipherName,
+                    this.cipherType,
+                    this.encryptedFile.getBinFile().toPath().toString(),
+                    this.decryptedFile.getBinFile().toPath().toString());
+
+            BinaryFile.useCommand(command);
+        } catch (InterruptedException | IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
 }
