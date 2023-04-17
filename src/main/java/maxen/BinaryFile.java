@@ -9,10 +9,10 @@ public class BinaryFile {
     private Integer[] binaryArray;
     private File BinFile;
 
-    public BinaryFile(String fileName) {
+    public BinaryFile(String filePath) {
 
         try {
-            this.BinFile = new File(fileName);
+            this.BinFile = new File(filePath);
 
             setBinaryArray(readFromFile(this.BinFile));
         } catch (FileNotFoundException e) {
@@ -28,10 +28,10 @@ public class BinaryFile {
         }
     }
 
-    public BinaryFile(String fileName, boolean create) {
+    public BinaryFile(String filePath, boolean create) {
 
         try {
-            this.BinFile = new File(fileName);
+            this.BinFile = new File(filePath);
 
             if (create) {
                 this.BinFile.createNewFile();
@@ -100,14 +100,42 @@ public class BinaryFile {
         }
     }
 
-    static public void write_file(String filePath, Integer[] content) throws FileNotFoundException, IOException {
-        FileOutputStream write = new FileOutputStream(filePath);
+    public void write_file(Integer[] content) throws FileNotFoundException, IOException {
+        FileOutputStream write = new FileOutputStream(this.BinFile.toPath().toString());
         DataOutputStream w = new DataOutputStream(write);
 
         for (Integer charWrite : content) {
             w.writeByte(charWrite);
         }
         w.close();
+    }
+
+    public void write_file(int[] content) {
+        FileOutputStream write;
+        try {
+            write = new FileOutputStream(this.BinFile.toPath().toString());
+            DataOutputStream w = new DataOutputStream(write);
+
+            for (int charWrite : content) {
+                w.writeByte(charWrite);
+            }
+            w.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    static public void useCommand(String commandText) throws IOException, InterruptedException {
+
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("bash", "-c", commandText);
+        Process pr = processBuilder.start();
+        pr.waitFor();
     }
 
 }
