@@ -130,6 +130,29 @@ public class BinaryFile {
 
     }
 
+    public void write_file(int[][] content) {
+        FileOutputStream write;
+        try {
+            write = new FileOutputStream(this.BinFile.toPath().toString());
+            DataOutputStream w = new DataOutputStream(write);
+
+            for (int[] block : content) {
+                for (int charWrite : block) {
+
+                    w.writeByte(charWrite);
+                }
+            }
+            w.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
     static public void useCommand(String commandText) throws IOException, InterruptedException {
 
         ProcessBuilder processBuilder = new ProcessBuilder();

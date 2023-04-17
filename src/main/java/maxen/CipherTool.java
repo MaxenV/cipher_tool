@@ -32,8 +32,7 @@ public class CipherTool {
         // Create workingFiles
         this.encryptedFile = new BinaryFile("workingFiles/.workingEncrypted", true);
         this.decryptedFile = new BinaryFile("workingFiles/.workingDecrypted", true);
-        this.encryptedFile.write_file(encryptedArray);
-        updateDecriptFile();
+        updateWorkingFiles();
 
         // openssl enc -aes-256-cbc -d -in ./workingFiles/.worworkingEncrypted -out
         // ./workingFiles/.workingDecrypted -K "abc" -iv "abc"
@@ -196,7 +195,9 @@ public class CipherTool {
         return -1;
     }
 
-    private void updateDecriptFile() {
+    private void updateWorkingFiles() {
+        this.encryptedFile.write_file(this.encryptedArray);
+
         try {
             String command = String.format("openssl enc -%s-%s -d -in %s -out %s -K \"abc\" -iv \"abc\" ",
                     this.cipherName,
@@ -209,6 +210,33 @@ public class CipherTool {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    /**
+     * General repair method
+     *
+     * Check every block, when find wrong
+     * send blockid to specyfic repair function
+     */
+    public void repair() {
+        boolean result = true;
+        int wrong_block = -1;
+        do {
+            wrong_block = find_wrong(this.encryptedArray);
+            if (this.cipherType == "cbc" && wrong_block != -1)
+                result = repair_cbc(wrong_block);
+
+        } while (wrong_block != -1);
+        if (result) {
+            System.out.println("Block fixed successfully");
+        } else {
+            System.out.println("Something went wrong");
+            System.out.println("Block is not fixed");
+        }
+    }
+
+    private boolean repair_cbc(int id_wrong) {
+        return false;
     }
 
 }
