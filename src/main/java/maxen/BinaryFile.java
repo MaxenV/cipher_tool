@@ -7,13 +7,14 @@ import java.util.List;
 public class BinaryFile {
 
     private Integer[] binaryArray;
+    private File BinFile;
 
-    public BinaryFile(String fileName) {
+    public BinaryFile(String filePath) {
 
         try {
-            File file = new File(fileName);
+            this.BinFile = new File(filePath);
 
-            setBinary(file);
+            setBinaryArray(readFromFile(this.BinFile));
         } catch (FileNotFoundException e) {
             System.out.println("File was not found.");
             // e.printStackTrace();
@@ -27,7 +28,30 @@ public class BinaryFile {
         }
     }
 
-    public void setBinary(File input_file) throws IOException, Exception {
+    public BinaryFile(String filePath, boolean create) {
+
+        try {
+            this.BinFile = new File(filePath);
+
+            if (create) {
+                this.BinFile.createNewFile();
+            }
+
+            setBinaryArray(readFromFile(this.BinFile));
+        } catch (FileNotFoundException e) {
+            System.out.println("File was not found.");
+            // e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Can't create binary array from file content.");
+            // e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("Something went wrong");
+            System.out.println(e.getMessage());
+        } finally {
+        }
+    }
+
+    private List<Integer> readFromFile(File input_file) throws IOException {
         FileInputStream read;
         List<Integer> listOfBytes = new ArrayList<Integer>();
 
@@ -39,23 +63,13 @@ public class BinaryFile {
         }
 
         read.close();
-        this.binaryArray = new Integer[listOfBytes.size()];
-        this.binaryArray = listOfBytes.toArray(this.binaryArray);
+        return listOfBytes;
     }
 
-    public void setBinary(ArrayList<Integer> inputArray) throws Exception {
-        boolean correct = true;
-        for (Integer abyte : inputArray.toArray(this.binaryArray)) {
-            if (abyte >= 0 && abyte <= 255) {
-                correct = false;
-                break;
-            }
-        }
-        if (correct) {
-            this.binaryArray = inputArray.toArray(this.binaryArray);
-        } else {
-            throw new Exception("Wrong input array");
-        }
+    private void setBinaryArray(List<Integer> listInt) {
+
+        this.binaryArray = new Integer[listInt.size()];
+        this.binaryArray = listInt.toArray(this.binaryArray);
     }
 
     public Integer[] getBinaryArray() {
@@ -72,8 +86,22 @@ public class BinaryFile {
         return result;
     }
 
-    static public void write_file(String filePath, Integer[] content) throws FileNotFoundException, IOException {
-        FileOutputStream write = new FileOutputStream(filePath);
+    public File getBinFile() {
+        return BinFile;
+    }
+
+    public void setBinFile(File binFile) {
+        this.BinFile = binFile;
+        try {
+            setBinaryArray(readFromFile(this.BinFile));
+        } catch (IOException e) {
+            System.out.println("Can't create binary array from file content.");
+            // e.printStackTrace();
+        }
+    }
+
+    public void write_file(Integer[] content) throws FileNotFoundException, IOException {
+        FileOutputStream write = new FileOutputStream(this.BinFile.toPath().toString());
         DataOutputStream w = new DataOutputStream(write);
 
         for (Integer charWrite : content) {
@@ -81,4 +109,56 @@ public class BinaryFile {
         }
         w.close();
     }
+
+    public void write_file(int[] content) {
+        FileOutputStream write;
+        try {
+            write = new FileOutputStream(this.BinFile.toPath().toString());
+            DataOutputStream w = new DataOutputStream(write);
+
+            for (int charWrite : content) {
+                w.writeByte(charWrite);
+            }
+            w.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    public void write_file(int[][] content) {
+        FileOutputStream write;
+        try {
+            write = new FileOutputStream(this.BinFile.toPath().toString());
+            DataOutputStream w = new DataOutputStream(write);
+
+            for (int[] block : content) {
+                for (int charWrite : block) {
+
+                    w.writeByte(charWrite);
+                }
+            }
+            w.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    static public void useCommand(String commandText) throws IOException, InterruptedException {
+
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("bash", "-c", commandText);
+        Process pr = processBuilder.start();
+        pr.waitFor();
+    }
+
 }
