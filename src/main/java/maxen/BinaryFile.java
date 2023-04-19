@@ -6,7 +6,7 @@ import java.util.List;
 
 public class BinaryFile {
 
-    private Integer[] binaryArray;
+    private int[] binaryArray;
     private File BinFile;
 
     public BinaryFile(String filePath) {
@@ -51,7 +51,7 @@ public class BinaryFile {
         }
     }
 
-    private List<Integer> readFromFile(File input_file) throws IOException {
+    private int[] readFromFile(File input_file) throws IOException {
         FileInputStream read;
         List<Integer> listOfBytes = new ArrayList<Integer>();
 
@@ -63,17 +63,19 @@ public class BinaryFile {
         }
 
         read.close();
-        return listOfBytes;
+        int[] result = listOfBytes.stream().mapToInt(i -> i).toArray();
+
+        return result;
+
     }
 
-    private void setBinaryArray(List<Integer> listInt) {
+    private void setBinaryArray(int[] binaryArray) {
 
-        this.binaryArray = new Integer[listInt.size()];
-        this.binaryArray = listInt.toArray(this.binaryArray);
+        this.binaryArray = binaryArray;
     }
 
-    public Integer[] getBinaryArray() {
-        return binaryArray;
+    public int[] getBinaryArray() {
+        return this.binaryArray;
     }
 
     public String get_text() {

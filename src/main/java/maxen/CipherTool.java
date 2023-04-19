@@ -210,6 +210,7 @@ public class CipherTool {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        this.decryptedArray = this.make_blocks(this.decryptedFile.getBinaryArray());
     }
 
     /**
