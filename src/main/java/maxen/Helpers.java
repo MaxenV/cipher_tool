@@ -27,6 +27,16 @@ public class Helpers {
         System.out.println();
     }
 
+    static void showArray(int[][] input) {
+        for (int[] inside : input) {
+            System.out.println();
+            for (int i : inside) {
+                System.out.print(i + ", ");
+            }
+        }
+        System.out.println();
+    }
+
     static char[] char_arr_from_int(int[] input) {
         char[] result = new char[input.length];
         for (int i = 0; i < result.length; i++) {

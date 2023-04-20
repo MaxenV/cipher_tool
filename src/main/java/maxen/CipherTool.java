@@ -14,13 +14,17 @@ public class CipherTool {
     private int blockSize;
     private BinaryFile encryptedFile;
     private BinaryFile decryptedFile;
+    private String cipherKey;
+    private String cipherIV;
 
     // ANCHOR Counstructors CipherTool
-    public CipherTool(int[] encryptedArray, String cipherName, String cipherType) {
+    public CipherTool(int[] encryptedArray, String cipherName, String cipherType, String cipherKey, String cipherIV) {
         this.cipherName = cipherName;
         this.cipherType = cipherType;
         this.blockSize = 16;
         this.encryptedArray = make_blocks(encryptedArray);
+        this.cipherKey = cipherKey;
+        this.cipherIV = cipherIV;
 
         // Add default allowed chars
         addToAllowedChars(48, 57); // 0-9
@@ -33,9 +37,6 @@ public class CipherTool {
         this.encryptedFile = new BinaryFile("workingFiles/.workingEncrypted", true);
         this.decryptedFile = new BinaryFile("workingFiles/.workingDecrypted", true);
         updateWorkingFiles();
-
-        // openssl enc -aes-256-cbc -d -in ./workingFiles/.worworkingEncrypted -out
-        // ./workingFiles/.workingDecrypted -K "abc" -iv "abc"
     }
 
     /**
@@ -48,6 +49,23 @@ public class CipherTool {
     }
 
     // ANCHOR Setters and getters CipherTool
+
+    public String getCipherKey() {
+        return cipherKey;
+    }
+
+    public void setCipherKey(String cipherKey) {
+        this.cipherKey = cipherKey;
+    }
+
+    public String getCipherIV() {
+        return cipherIV;
+    }
+
+    public void setCipherIV(String cipherIV) {
+        this.cipherIV = cipherIV;
+    }
+
     public BinaryFile getEncryptedFile() {
         return encryptedFile;
     }
@@ -73,7 +91,7 @@ public class CipherTool {
     }
 
     public int[][] getDecryptedArray() {
-        return decryptedArray;
+        return this.decryptedArray;
     }
 
     public void setDecryptedArray(int[][] decryptedArray) {
@@ -218,7 +236,6 @@ public class CipherTool {
             this.decryptedArray = this.make_blocks(this.decryptedFile.getBinaryArray());
 
         } catch (InterruptedException | IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -230,6 +247,9 @@ public class CipherTool {
      * send blockid to specyfic repair function
      */
     public void repair() {
+        if (!this.cipherType.equals("cbc")) {
+            System.out.println("Only cbc type is supported");
+        }
         boolean result = true;
         int wrong_block = -1;
         do {
