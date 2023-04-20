@@ -48,6 +48,14 @@ public class CipherTool {
     }
 
     // ANCHOR Setters and getters CipherTool
+    public BinaryFile getEncryptedFile() {
+        return encryptedFile;
+    }
+
+    public BinaryFile getDecryptedFile() {
+        return decryptedFile;
+    }
+
     public int[][] getencryptedArray() {
         return encryptedArray;
     }
@@ -206,11 +214,15 @@ public class CipherTool {
                     this.decryptedFile.getBinFile().toPath().toString());
 
             BinaryFile.useCommand(command);
+
+            // I need catch decrypted file after it change
+            this.decryptedFile = new BinaryFile("workingFiles/.workingDecrypted", true);
+            this.decryptedArray = this.make_blocks(this.decryptedFile.getBinaryArray());
+
         } catch (InterruptedException | IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        this.decryptedArray = this.make_blocks(this.decryptedFile.getBinaryArray());
     }
 
     /**
