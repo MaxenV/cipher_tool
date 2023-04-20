@@ -56,7 +56,7 @@ public class CipherTool {
         return decryptedFile;
     }
 
-    public int[][] getencryptedArray() {
+    public int[][] getEncryptedArray() {
         return encryptedArray;
     }
 
@@ -66,10 +66,6 @@ public class CipherTool {
 
     public void setencryptedArray(int[][] encryptedArray) {
         this.encryptedArray = encryptedArray;
-    }
-
-    public int[][] getEncryptedArray() {
-        return encryptedArray;
     }
 
     public void setEncryptedArray(int[][] encryptedArray) {
@@ -165,7 +161,9 @@ public class CipherTool {
             }
             counter++;
         }
-        resultList.add(inside);
+        if (characters.length % this.blockSize > 0) {
+            resultList.add(inside);
+        }
 
         int[][] resultArray = new int[resultList.size()][this.blockSize];
         resultArray = resultList.toArray(resultArray);
@@ -235,11 +233,11 @@ public class CipherTool {
         boolean result = true;
         int wrong_block = -1;
         do {
-            wrong_block = find_wrong(this.encryptedArray);
+            wrong_block = find_wrong(this.decryptedArray);
             if (this.cipherType == "cbc" && wrong_block != -1)
                 result = repair_cbc(wrong_block);
 
-        } while (wrong_block != -1);
+        } while (wrong_block != -1 && result != false);
         if (result) {
             System.out.println("Block fixed successfully");
         } else {
@@ -249,6 +247,19 @@ public class CipherTool {
     }
 
     private boolean repair_cbc(int id_wrong) {
+        for (int charID = 0; charID < encryptedArray[id_wrong].length; charID++) {
+
+            int prevChar = this.encryptedArray[id_wrong][charID];
+            for (int newValue = 0; newValue <= 255; newValue++) {
+                this.encryptedArray[id_wrong][charID] = newValue;
+                this.updateWorkingFiles();
+
+                if (!this.isBroken(this.decryptedArray[id_wrong])) {
+                    return true;
+                }
+            }
+            this.encryptedArray[id_wrong][charID] = prevChar;
+        }
         return false;
     }
 
